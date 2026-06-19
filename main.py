@@ -26,17 +26,18 @@ from action import Action, Junc, action_to_dict, action_from_dict
 from drafts import draft_classify_by_type, draft_classify_by_date, draft_wechat_junction
 from wx import is_admin
 
+
 LOG_DIR = Path(__file__).parent / 'logs'
-
-
-def _ensure_log_dir():
-    LOG_DIR.mkdir(exist_ok=True)
-
+PLANS_DIR = Path(__file__).parent / 'plans'
 
 def _log_path(draft_name: str) -> Path:
     ts = datetime.now().strftime('%Y%m%d_%H%M%S')
     return LOG_DIR / f'{ts}_{draft_name}.jsonl'
 
+def _plan_path(draft_name: str) -> Path:
+    ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+    PLANS_DIR.mkdir(parents=True, exist_ok=True)
+    return PLANS_DIR / f'{ts}_{draft_name}.plan'
 
 def _log_write(log_file: Path, entry: dict):
     with open(log_file, 'a', encoding='utf-8') as f:
@@ -49,37 +50,61 @@ DRAFT_REGISTRY = {
     'wechat-migrate':   (draft_wechat_junction,   '--wx-path --user --suffix --tar-path --end-time'),
 }
 
-
 def cmd_plan(args: argparse.Namespace):
-    """预览 Action 列表，不执行。"""
+    """生成 Action 列表并保存为计划文件（不执行）。"""
     actions = _build_actions(args)
     if not actions:
         print('(空列表，没有需要执行的操作)')
         return
+
+    plan_file = args.output if args.output else _plan_path(args.draft)
+    if isinstance(plan_file, str):
+        plan_file = Path(plan_file)
+    plan_file.parent.mkdir(parents=True, exist_ok=True)
+
+    plan_data = {
+        'draft': args.draft,
+        'created_at': datetime.now().isoformat(),
+        'actions': [action_to_dict(a) for a in actions],
+    }
+    with open(plan_file, 'w', encoding='utf-8') as f:
+        json.dump(plan_data, f, ensure_ascii=False, indent=2)
+
     print(f'共 {len(actions)} 个操作：')
-    print('\u2500' * 60)
+    print('─' * 60)
     for i, act in enumerate(actions, 1):
         print(f'  {i:>4}. {act.desc}')
-    print('\u2500' * 60)
+    print('─' * 60)
     print(f'总计 {len(actions)} 个操作（plan 模式，未执行）')
+    print(f'计划文件: {plan_file}')
 
 
 def cmd_run(args: argparse.Namespace):
-    """执行操作并记录日志。"""
-    actions = _build_actions(args)
+    """从计划文件读取并执行 Action 列表。"""
+    plan_file = Path(args.planfile)
+    if not plan_file.is_file():
+        print(f'计划文件不存在: {plan_file}', file=sys.stderr)
+        sys.exit(1)
+
+    with open(plan_file, 'r', encoding='utf-8') as f:
+        plan_data = json.load(f)
+
+    actions = [action_from_dict(a) for a in plan_data['actions']]
+    draft_name = plan_data.get('draft', 'unknown')
+
     if not actions:
         print('(空列表，没有需要执行的操作)')
         return
 
-    draft_name = args.draft
-    log_file = _log_path(draft_name)
     _check_admin_if_needed(actions)
+
+    log_file = _log_path(draft_name)
 
     print(f'共 {len(actions)} 个操作，日志: {log_file}')
     _log_write(log_file, {'event': 'start', 'draft': draft_name, 'total': len(actions)})
 
     success = 0
-    failed: list[tuple[int, Action, str]] = []
+    failed = []
 
     for i, act in enumerate(actions, 1):
         desc = act.desc
@@ -89,7 +114,7 @@ def cmd_run(args: argparse.Namespace):
 
         try:
             act.run()
-            print('\u2713')
+            print('✓')
             _log_write(log_file, {
                 'event': 'action_done', 'index': i, 'desc': desc, 'status': 'done',
             })
@@ -100,7 +125,7 @@ def cmd_run(args: argparse.Namespace):
                 'event': 'action_failed', 'index': i, 'desc': desc,
                 'status': 'failed', 'error': tb_str,
             })
-            print(f'\u2717 {e}')
+            print(f'✗ {e}')
             failed.append((i, act, tb_str))
 
     _log_write(log_file, {
@@ -120,7 +145,7 @@ def cmd_run(args: argparse.Namespace):
 
 def cmd_reverse(args: argparse.Namespace):
     """从日志文件回滚已成功的操作（逆序执行 reverse()）。"""
-    """从日志文件回滚已成功的操作（逆序执行 reverse()）。"""
+    log_file = Path(args.logfile)
     if not log_file.is_file():
         print(f'日志文件不存在: {log_file}', file=sys.stderr)
         sys.exit(1)
@@ -165,9 +190,11 @@ def cmd_reverse(args: argparse.Namespace):
             print(f'  {idx}. {desc}')
             for line in tb_str.strip().split('\n'):
                 print(f'       {line}')
+
+
 def cmd_log(args: argparse.Namespace):
     """查看操作历史。"""
-    _ensure_log_dir()
+    LOG_DIR.mkdir(exist_ok=True)
     log_files = sorted(LOG_DIR.iterdir(), reverse=True)
     if not log_files:
         print('暂无操作日志。')
@@ -234,7 +261,7 @@ def _check_admin_if_needed(actions: list[Action]):
 
 
 def main():
-    _ensure_log_dir()
+    LOG_DIR.mkdir(exist_ok=True)
 
     parser = argparse.ArgumentParser(
         prog='flchemist',
@@ -242,21 +269,25 @@ def main():
     )
     sub = parser.add_subparsers(dest='command', required=True)
 
-    for cmd_name in ('plan', 'run'):
-        p = sub.add_parser(cmd_name, help='预览' if cmd_name == 'plan' else '执行操作')
-        p.add_argument('draft', choices=list(DRAFT_REGISTRY), help='操作类型')
-        p.add_argument('--src', type=str, help='源目录（classify-by-* 需要）')
-        p.add_argument('--dst', type=str, help='目标目录（classify-by-* 需要）')
-        p.add_argument('--pattern', type=str, default='%Y-%m',
-                       help='日期格式（classify-by-date 可选，默认 %%Y-%%m）')
-        p.add_argument('--wx-path', type=str, help='微信数据目录（wechat-migrate 需要）')
-        p.add_argument('--user', type=str, help='微信用户 ID（wechat-migrate 需要）')
-        p.add_argument('--suffix', type=str, help='微信用户后缀（wechat-migrate 需要）')
-        p.add_argument('--tar-path', type=str, help='目标迁移目录（wechat-migrate 需要）')
-        p.add_argument('--end-time', type=str, default=time.strftime('%Y-%m'),
-                       help='截止时间，该时间之前的日期数据将被迁移（默认当前月）')
-        p.add_argument('--no-move-backup', action='store_true',
-                       help='不移动备份目录（wechat-migrate 可选）')
+    p = sub.add_parser('plan', help='生成操作计划（不执行）')
+    p.add_argument('draft', choices=list(DRAFT_REGISTRY), help='操作类型')
+    p.add_argument('--src', type=str, help='源目录（classify-by-* 需要）')
+    p.add_argument('--dst', type=str, help='目标目录（classify-by-* 需要）')
+    p.add_argument('--pattern', type=str, default='%Y-%m',
+                   help='日期格式（classify-by-date 可选，默认 %%Y-%%m）')
+    p.add_argument('--wx-path', type=str, help='微信数据目录（wechat-migrate 需要）')
+    p.add_argument('--user', type=str, help='微信用户 ID（wechat-migrate 需要）')
+    p.add_argument('--suffix', type=str, help='微信用户后缀（wechat-migrate 需要）')
+    p.add_argument('--tar-path', type=str, help='目标迁移目录（wechat-migrate 需要）')
+    p.add_argument('--end-time', type=str, default=time.strftime('%Y-%m'),
+                   help='截止时间，该时间之前的日期数据将被迁移（默认当前月）')
+    p.add_argument('--no-move-backup', action='store_true',
+                   help='不移动备份目录（wechat-migrate 可选）')
+    p.add_argument('--output', '-o', type=str, default=None,
+                   help='计划文件输出路径（默认自动生成到 plans/ 目录）')
+
+    p = sub.add_parser('run', help='从计划文件执行操作')
+    p.add_argument('planfile', type=str, help='计划文件路径（.plan）')
 
     p = sub.add_parser('reverse', help='回滚操作')
     p.add_argument('logfile', type=str, help='操作日志文件路径')
