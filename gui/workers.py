@@ -87,6 +87,7 @@ class ExecuteWorker(QtCore.QThread):
         self._log_file = log_file
         self._plan_file = plan_file
         self._canceled = False
+        self._ignore_all = False
         self._user_decision = None
         self._mutex = QtCore.QMutex()
         self._wait_cond = QtCore.QWaitCondition()
@@ -132,17 +133,24 @@ class ExecuteWorker(QtCore.QThread):
                 self.action_status.emit(i, "failed")
                 self._write_log({"event": "action_failed", "index": i, "desc": act.desc, "status": "failed", "error": tb, "action_data": action_to_dict(act)})
 
-                # Ask user for decision - wait for main thread response
-                self._user_decision = None
-                self.action_failed_request.emit(i, act.desc, str(e))
+                if self._ignore_all:
+                    decision = "ignore"
+                else:
+                    # Ask user for decision - wait for main thread response
+                    self._user_decision = None
+                    self.action_failed_request.emit(i, act.desc, str(e))
 
-                # Block until main thread calls set_user_decision
-                self._mutex.lock()
-                while self._user_decision is None and not self._canceled:
-                    self._wait_cond.wait(self._mutex)
-                self._mutex.unlock()
+                    # Block until main thread calls set_user_decision
+                    self._mutex.lock()
+                    while self._user_decision is None and not self._canceled:
+                        self._wait_cond.wait(self._mutex)
+                    self._mutex.unlock()
 
-                decision = self._user_decision
+                    decision = self._user_decision
+                    if decision == "ignore_all":
+                        self._ignore_all = True
+                        decision = "ignore"
+
                 result.decision = ExecuteDecision(decision)
                 self._log.info("User decision: %s for action %d (%s)", decision, i, act.desc)
                 self._write_log({"event": "user_decision", "index": i, "decision": decision, "desc": act.desc})

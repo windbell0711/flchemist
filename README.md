@@ -3,7 +3,7 @@
 **Windows 文件批量处理框架** — 一组可组合、可逆的原子文件操作单元（Action）和常用编排函数（Draft），
 最初为微信数据迁移而写，现已通用化。
 
-> **Data is precious, Operate carefully.** 所有操作均有日志记录，支持回滚。但仍建议提前备份重要数据。
+> **Data is precious, Operate carefully.  务必务必提前备份重要数据！！！** 
 
 ---
 
@@ -58,22 +58,22 @@ plan  <draft> [选项]   ──生成──>  .plan 文件 (JSON, Action 列表)
 
 不可再分的文件操作单元，保证可逆、自愈、纯函数。
 
-| Action | 说明 | run() 特性 | reverse() |
-|--------|------|-----------|-----------|
-| **Copy** | 复制文件或目录 | 文件用 shutil.copy2 + 原子 .tmp 写入；目录用 shutil.copytree；支持 dir_only 模式 | 删除目标 |
-| **Move** | 移动文件或目录 | 同卷用 Path.rename（原子）；跨卷 fallback 为 Copy + 删源 | 逆序执行 |
-| **Rename** | 重命名文件或目录 | Path.rename 原子操作 | 反向 rename |
-| **Junc** | 创建 NTFS Junction 点 | 三步流程，每一步失败可回滚 | 删 Junction + 移回数据 |
+| Action     | 说明                 | run() 特性                                                         | reverse()         |
+|------------|--------------------|------------------------------------------------------------------|-------------------|
+| **Copy**   | 复制文件或目录            | 文件用 shutil.copy2 + 原子 .tmp 写入；目录用 shutil.copytree；支持 dir_only 模式 | 删除目标              |
+| **Move**   | 移动文件或目录            | 同卷用 Path.rename（原子）；跨卷 fallback 为 Copy + 删源                      | 逆序执行              |
+| **Rename** | 重命名文件或目录           | Path.rename 原子操作                                                 | 反向 rename         |
+| **Junc**   | 创建 NTFS Junction 点 | 三步流程，每一步失败可回滚                                                    | 删 Junction + 移回数据 |
 
 ### Draft（编排函数）
 
 返回 list[Action] 的纯函数，无副作用。
 
-| Draft | 说明 | 选项 |
-|-------|------|------|
-| **classify-by-type** | 按扩展名分类 | --src --dst [--ext-map] |
-| **classify-by-date** | 按修改日期分类 | --src --dst [--pattern %Y-%m] |
-| **wechat-migrate** | 微信数据迁移 | --wx-path --user --suffix --tar-path --end-time |
+| Draft                | 说明      | 选项                                              |
+|----------------------|---------|-------------------------------------------------|
+| **classify-by-type** | 按扩展名分类  | --src --dst [--ext-map]                         |
+| **classify-by-date** | 按修改日期分类 | --src --dst [--pattern %Y-%m]                   |
+| **wechat-migrate**   | 微信数据迁移  | --wx-path --user --suffix --tar-path --end-time |
 
 ## 项目结构
 
@@ -142,13 +142,7 @@ pytest tests/ -v
 
 ## 依赖
 
-- Python >= 3.12
+- Python >= 3.14
 - psutil（微信进程检测）
-- PyQt6 >= 6.7 (GUI mode)
+- PyQt6 >= 6.11 (GUI mode)
 - 仅 Windows 支持 Junc（NTFS Junction）
-
-## 开发计划
-
-- EXE packaging (PyInstaller)
-- SymLink / HardLink / Compress 等预置 Action
-- 备份同步、文件扁平化等 Draft 场景

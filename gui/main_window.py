@@ -9,6 +9,7 @@ from gui.session import Session
 from gui.draft_dialog import DraftDialog
 from gui.execute_dialog import ExecuteDialog
 from gui.revert_dialog import RevertDialog
+from gui.info_dialog import InfoDialog
 from gui.tree_preview import TreePreviewWidget
 from action import action_from_dict
 
@@ -71,6 +72,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_revert.clicked.connect(self._open_revert)
         self.btn_revert.setEnabled(False)
         left_layout.addWidget(self.btn_revert)
+
+        self.btn_info = self._make_side_button("ℹ️  Info", "Learn how flchemist works")
+        self.btn_info.clicked.connect(self._open_info)
+        left_layout.addWidget(self.btn_info)
 
         left_layout.addStretch()
 
@@ -238,6 +243,10 @@ class MainWindow(QtWidgets.QMainWindow):
         dlg = ExecuteDialog(self.session, self)
         dlg.exec()
         self._update_session_state()
+
+    def _open_info(self):
+        dlg = InfoDialog(self)
+        dlg.exec()
 
     def _open_revert(self):
         if not self.session.actions:

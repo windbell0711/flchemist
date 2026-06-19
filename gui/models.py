@@ -51,6 +51,8 @@ class ActionStatus(enum.Enum):
 class ExecuteDecision(enum.Enum):
     ABORT = "abort"
     ROLLBACK_ALL = "rollback_all"
+    IGNORE = "ignore"
+    IGNORE_ALL = "ignore_all"
 
 
 class ParamConfig:

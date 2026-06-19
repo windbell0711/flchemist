@@ -153,7 +153,13 @@ class ExecuteDialog(QtWidgets.QDialog):
             f"Failed: {result.failed}",
         ]
         if result.decision:
-            d = "Abort current" if result.decision == ExecuteDecision.ABORT else "Rollback all"
+            decision_map = {
+                ExecuteDecision.ABORT: "Abort current",
+                ExecuteDecision.ROLLBACK_ALL: "Rollback all",
+                ExecuteDecision.IGNORE: "Ignore this action",
+                ExecuteDecision.IGNORE_ALL: "Ignore all failures",
+            }
+            d = decision_map.get(result.decision, result.decision.value)
             lines.append(f"User decision: {d}")
         if result.reverse_errors:
             lines.append("")
