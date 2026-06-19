@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from action import Action, Copy, Move, Rename, Junc
+from action import Action, Copy, Move, Rename, Junc, action_to_dict, action_from_dict
 
 
 def _touch(path: Path, content: str = "hello"):
@@ -159,3 +159,53 @@ class TestDesc:
 
     def test_junc_desc(self):
         assert "Junction" in Junc(src=Path("a"), dst=Path("b")).desc
+
+class TestSerialization:
+    def test_copy_roundtrip(self):
+        a = Copy(src=Path(r"C:\src\a.txt"), dst=Path(r"D:\dst\a.txt"))
+        data = action_to_dict(a)
+        restored = action_from_dict(data)
+        assert type(restored) is type(a)
+        assert restored.src == a.src
+        assert restored.dst == a.dst
+        assert restored.dir_only == a.dir_only
+        assert restored.desc == a.desc
+
+    def test_move_roundtrip(self):
+        a = Move(src=Path(r"C:\src\a.txt"), dst=Path(r"D:\dst\a.txt"))
+        data = action_to_dict(a)
+        restored = action_from_dict(data)
+        assert type(restored) is type(a)
+        assert restored.src == a.src
+        assert restored.dst == a.dst
+
+    def test_rename_roundtrip(self):
+        a = Rename(src=Path(r"C:\src\old.txt"), name="new.txt")
+        data = action_to_dict(a)
+        restored = action_from_dict(data)
+        assert type(restored) is type(a)
+        assert restored.src == a.src
+        assert restored.name == a.name
+
+    def test_junc_roundtrip(self):
+        a = Junc(src=Path(r"C:\data\wx"), dst=Path(r"D:\data\wx"))
+        data = action_to_dict(a)
+        restored = action_from_dict(data)
+        assert type(restored) is type(a)
+        assert restored.src == a.src
+        assert restored.dst == a.dst
+
+    def test_unknown_class_raises(self):
+        import pytest
+        with pytest.raises(ValueError, match="未知的 Action 类"):
+            action_from_dict({'__action_cls__': 'NonExistent', '__fields__': {}})
+
+    def test_json_compatible(self):
+        import json
+        a = Move(src=Path(r"C:\src\doc.pdf"), dst=Path(r"D:\dst\doc.pdf"))
+        data = action_to_dict(a)
+        # Must be JSON-serializable
+        json_str = json.dumps(data, ensure_ascii=False)
+        restored = json.loads(json_str)
+        assert restored['__action_cls__'] == 'Move'
+        assert restored['__fields__']['src'] == r'C:\src\doc.pdf'

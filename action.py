@@ -14,7 +14,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 
 
 @dataclass(frozen=True)
@@ -40,7 +40,6 @@ def _cleanup_path(p: Path):
         shutil.rmtree(p, ignore_errors=True)
     else:
         p.unlink(missing_ok=True)
-
 
 def _atomic_copy_file(src: Path, dst: Path):
     """同卷原子写入：先写 .tmp 再 rename。失败时清理临时 .tmp。"""
@@ -259,3 +258,29 @@ class Junc(Action):
                 capture_output=True, shell=False,
             )
             raise
+
+
+# -- 序列化支持（日志/回滚）----------------------------------------
+
+def action_to_dict(action: Action) -> dict:
+    """将 Action 序列化为 JSON 兼容的 dict。"""
+    cls_name = type(action).__name__
+    out: dict[str, object] = {}
+    for f in fields(action):
+        val = getattr(action, f.name)
+        out[f.name] = str(val) if isinstance(val, Path) else val
+    return {'__action_cls__': cls_name, '__fields__': out}
+
+def action_from_dict(data: dict) -> Action:
+    """从 action_to_dict 的输出重建 Action 实例。"""
+    cls_name = data['__action_cls__']
+    fields_data = data['__fields__']
+    path_fields = {'src', 'dst', 'tar_path', 'wx_path'}
+    kwargs = {
+        k: Path(v) if k in path_fields else v
+        for k, v in fields_data.items()
+    }
+    cls_map = {c.__name__: c for c in Action.__subclasses__()}
+    if cls_name not in cls_map:
+        raise ValueError(f'未知的 Action 类: {cls_name}')
+    return cls_map[cls_name](**kwargs)

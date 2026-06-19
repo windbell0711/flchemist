@@ -22,7 +22,7 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 
-from action import Action, Junc
+from action import Action, Junc, action_to_dict, action_from_dict
 from drafts import draft_classify_by_type, draft_classify_by_date, draft_wechat_junction
 from wx import is_admin
 
@@ -83,7 +83,8 @@ def cmd_run(args: argparse.Namespace):
 
     for i, act in enumerate(actions, 1):
         desc = act.desc
-        _log_write(log_file, {'event': 'action_start', 'index': i, 'desc': desc})
+        _log_write(log_file, {'event': 'action_start', 'index': i, 'desc': desc,
+                'action_data': action_to_dict(act)})
         print(f'[{i}/{len(actions)}] {desc} ... ', end='', flush=True)
 
         try:
@@ -118,8 +119,8 @@ def cmd_run(args: argparse.Namespace):
 
 
 def cmd_reverse(args: argparse.Namespace):
-    """从日志文件回滚操作。"""
-    log_file = Path(args.logfile)
+    """从日志文件回滚已成功的操作（逆序执行 reverse()）。"""
+    """从日志文件回滚已成功的操作（逆序执行 reverse()）。"""
     if not log_file.is_file():
         print(f'日志文件不存在: {log_file}', file=sys.stderr)
         sys.exit(1)
@@ -131,21 +132,39 @@ def cmd_reverse(args: argparse.Namespace):
             if line:
                 entries.append(json.loads(line))
 
-    done_actions = [e for e in entries if e.get('status') == 'done']
-    if not done_actions:
-        print('日志中没有已成功执行的操作记录，无需回滚。')
+    done_entries = [e for e in entries if e.get('status') == 'done' and 'action_data' in e]
+    if not done_entries:
+        print('日志中没有可回滚的操作记录。')
         return
 
-    done_actions.reverse()
-    print(f'将回滚 {len(done_actions)} 个操作（逆序）...')
-    for entry in done_actions:
+    done_entries.reverse()
+    print(f'将回滚 {len(done_entries)} 个操作（逆序执行 reverse()）...')
+    print('─' * 60)
+
+    success = 0
+    failed = []
+
+    for i, entry in enumerate(done_entries, 1):
         desc = entry.get('desc', '未知')
-        print(f'  回滚: {desc}')
+        print(f'[{i}/{len(done_entries)}] 回滚: {desc} ... ', end='', flush=True)
+        try:
+            action = action_from_dict(entry['action_data'])
+            action.reverse()
+            print('✓')
+            success += 1
+        except Exception as e:
+            tb_str = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
+            print(f'✗ {e}')
+            failed.append((i, desc, tb_str))
 
-    print(f'\n提示: reverse 命令目前仅展示回滚清单。')
-    print(f'如需精确回滚，请使用原 draft 参数配合反向操作。')
-
-
+    print('─' * 60)
+    print(f'回滚完成: {success} 成功, {len(failed)} 失败')
+    if failed:
+        print('回滚失败的操作:')
+        for idx, desc, tb_str in failed:
+            print(f'  {idx}. {desc}')
+            for line in tb_str.strip().split('\n'):
+                print(f'       {line}')
 def cmd_log(args: argparse.Namespace):
     """查看操作历史。"""
     _ensure_log_dir()

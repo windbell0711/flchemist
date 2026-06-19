@@ -12,15 +12,11 @@ from __future__ import annotations
 
 import ctypes
 import sys
-import time
 from contextlib import suppress
 from pathlib import Path
 from typing import Optional
 
 import psutil
-
-from action import Action, Junc
-from utils import encode_to_filename
 
 
 def is_admin() -> bool:
@@ -90,41 +86,41 @@ def wx_check_junction(
     return None
 
 
-def wx_draft_junction(
-    wx_path: Path,
-    user: str,
-    suffix: str,
-    tar_path: Path,
-    end_time: str = time.strftime('%Y-%M'),
-    move_backup: bool = True,
-) -> list[Action]:
-    """生成微信数据迁移的 Action 列表（Junction 操作）。
-
-    请保证先 wx_check_junction 再 draft！
-    """
-    ret: list[Action] = []
-    msg_path = wx_path / (user + suffix) / 'msg'
-    backup_path = wx_path / 'Backup' / (user + suffix)
-
-    def _juntion(directory: Path):
-        for p in directory.glob(r'20[0-9][0-9]-[0-1][0-9]/'):
-            if p.name < end_time and p.is_dir():
-                new_name = encode_to_filename(
-                    str(directory.relative_to(wx_path) / p.name)
-                )
-                ret.append(Junc(src=p, dst=tar_path / new_name))
-
-    if msg_path.is_dir():
-        _juntion(msg_path / 'file')
-        _juntion(msg_path / 'video')
-        attach_dir = msg_path / 'attach'
-        if attach_dir.is_dir():
-            for chat in attach_dir.iterdir():
-                if chat.is_dir():
-                    _juntion(chat)
-
-    if move_backup and backup_path.is_dir():
-        new_name = encode_to_filename(str(backup_path.relative_to(wx_path)))
-        ret.append(Junc(src=backup_path, dst=tar_path / new_name))
-
-    return ret
+# def wx_draft_junction(
+#     wx_path: Path,
+#     user: str,
+#     suffix: str,
+#     tar_path: Path,
+#     end_time: str = time.strftime('%Y-%M'),
+#     move_backup: bool = True,
+# ) -> list[Action]:
+#     """生成微信数据迁移的 Action 列表（Junction 操作）。
+#
+#     请保证先 wx_check_junction 再 draft！
+#     """
+#     ret: list[Action] = []
+#     msg_path = wx_path / (user + suffix) / 'msg'
+#     backup_path = wx_path / 'Backup' / (user + suffix)
+#
+#     def _juntion(directory: Path):
+#         for p in directory.glob(r'20[0-9][0-9]-[0-1][0-9]/'):
+#             if p.name < end_time and p.is_dir():
+#                 new_name = encode_to_filename(
+#                     str(directory.relative_to(wx_path) / p.name)
+#                 )
+#                 ret.append(Junc(src=p, dst=tar_path / new_name))
+#
+#     if msg_path.is_dir():
+#         _juntion(msg_path / 'file')
+#         _juntion(msg_path / 'video')
+#         attach_dir = msg_path / 'attach'
+#         if attach_dir.is_dir():
+#             for chat in attach_dir.iterdir():
+#                 if chat.is_dir():
+#                     _juntion(chat)
+#
+#     if move_backup and backup_path.is_dir():
+#         new_name = encode_to_filename(str(backup_path.relative_to(wx_path)))
+#         ret.append(Junc(src=backup_path, dst=tar_path / new_name))
+#
+#     return ret
