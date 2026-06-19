@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# gui_main.py - Entry point for flchemist GUI
+﻿#!/usr/bin/env python3
+"""Entry point for flchemist GUI — replaces the old wizard with phase-based dialogs."""
 from __future__ import annotations
 import logging
 import os
@@ -32,36 +32,38 @@ log.info("PyQt6 DLL dir prepended to PATH: %s", _dll_dir)
 
 # Set global exception hook to catch Python-level crashes
 _orig_excepthook = sys.excepthook
+
 def _exception_hook(exc_type, exc_value, exc_tb):
     log.critical("Unhandled exception", exc_info=(exc_type, exc_value, exc_tb))
     _orig_excepthook(exc_type, exc_value, exc_tb)
+
 sys.excepthook = _exception_hook
 
 from PyQt6 import QtWidgets, QtGui
 log.info("PyQt6 imported")
 
-from gui.wizard import FlchemistWizard
-log.info("FlchemistWizard imported")
-
+from gui.main_window import MainWindow
+from gui.theme import dark_stylesheet
+log.info("MainWindow imported")
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("Fusion")
-    log.info("QApplication created, style=Fusion")
+    app.setStyleSheet(dark_stylesheet())
+    log.info("QApplication created, dark theme applied")
     app.setApplicationName("flchemist")
-    app.setApplicationDisplayName("flchemist - Windows 文件批量处理工具")
-    wiz = FlchemistWizard()
-    log.info("Wizard created")
-    wiz.show()
-    log.info("Wizard shown, entering event loop")
-    sys.exit(app.exec())
+    app.setApplicationDisplayName("flchemist")
 
+    window = MainWindow()
+    window.show()
+    log.info("MainWindow shown, entering event loop")
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
     try:
         main()
     except SystemExit:
-        raise  # allow sys.exit to work
+        raise
     except BaseException:
         log.exception("Fatal error in GUI main")
         raise

@@ -197,3 +197,31 @@ class ReverseWorker(QtCore.QThread):
             self._log.error("Reverse failed: %s", str(e))
             tb = "".join(traceback.format_exception(type(e), e, e.__traceback__))
             self.finished.emit(0, [(0, "error", str(e) + "\n" + tb)])
+
+
+class PlanReverseWorker(QtCore.QThread):
+    """Reverse actions from a .plan file (iterates in reverse order)."""
+    _log = logging.getLogger("flchemist.PlanReverseWorker")
+    progress = QtCore.pyqtSignal(int, int)
+    finished = QtCore.pyqtSignal(int, list)
+
+    def __init__(self, actions: list, parent=None):
+        super().__init__(parent)
+        self._actions = actions
+
+    def run(self):
+        success = 0
+        errors: list = []
+        total = len(self._actions)
+        for i, act in enumerate(reversed(self._actions), 1):
+            try:
+                act.reverse()
+                success += 1
+                self._log.info("Reversed %d/%d: %s", i, total, act.desc)
+            except Exception as e:
+                import traceback
+                tb = "".join(traceback.format_exception(type(e), e, e.__traceback__))
+                errors.append((i, act.desc, tb))
+                self._log.error("Reverse failed %d/%d: %s - %s", i, total, act.desc, e)
+            self.progress.emit(i, total)
+        self.finished.emit(success, errors)
