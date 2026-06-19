@@ -18,6 +18,7 @@ import argparse
 import json
 import sys
 import time
+import logging
 import traceback
 from datetime import datetime
 from pathlib import Path
@@ -51,6 +52,8 @@ DRAFT_REGISTRY = {
 }
 
 def cmd_plan(args: argparse.Namespace):
+    log = logging.getLogger("flchemist.main")
+    log.info("plan command: draft=%s src=%s dst=%s", args.draft, getattr(args, 'src', '?'), getattr(args, 'dst', '?'))
     """生成 Action 列表并保存为计划文件（不执行）。"""
     actions = _build_actions(args)
     if not actions:
@@ -80,6 +83,8 @@ def cmd_plan(args: argparse.Namespace):
 
 
 def cmd_run(args: argparse.Namespace):
+    log = logging.getLogger("flchemist.main")
+    log.info("run command: planfile=%s", args.planfile)
     """从计划文件读取并执行 Action 列表。"""
     plan_file = Path(args.planfile)
     if not plan_file.is_file():
@@ -143,53 +148,50 @@ def cmd_run(args: argparse.Namespace):
         print(f'\n可执行 reverse {log_file} 来回滚已成功的操作。')
 
 
-def cmd_reverse(args: argparse.Namespace):
-    """从日志文件回滚已成功的操作（逆序执行 reverse()）。"""
-    log_file = Path(args.logfile)
-    if not log_file.is_file():
-        print(f'日志文件不存在: {log_file}', file=sys.stderr)
-        sys.exit(1)
 
+def reverse_from_log(log_file):
+    log = logging.getLogger("flchemist.reverse")
+    log.info("Starting reverse from %s", log_file)
+    if not log_file.is_file():
+        raise FileNotFoundError(f'log file not found: {log_file}')
     entries = []
     with open(log_file, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip()
             if line:
                 entries.append(json.loads(line))
-
     done_entries = [e for e in entries if e.get('status') == 'done' and 'action_data' in e]
-    if not done_entries:
-        print('日志中没有可回滚的操作记录。')
-        return
-
     done_entries.reverse()
-    print(f'将回滚 {len(done_entries)} 个操作（逆序执行 reverse()）...')
-    print('─' * 60)
-
     success = 0
     failed = []
-
     for i, entry in enumerate(done_entries, 1):
-        desc = entry.get('desc', '未知')
-        print(f'[{i}/{len(done_entries)}] 回滚: {desc} ... ', end='', flush=True)
+        desc = entry.get('desc', 'unknown')
         try:
             action = action_from_dict(entry['action_data'])
             action.reverse()
-            print('✓')
             success += 1
+            log.debug("Reverse OK: action %d (%s)", i, desc)
         except Exception as e:
             tb_str = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
-            print(f'✗ {e}')
+            log.error("Reverse failed: action %d (%s): %s", i, desc, str(e))
             failed.append((i, desc, tb_str))
+    log.info("Reverse done: %d success, %d failed", success, len(failed))
+    return success, failed
 
-    print('─' * 60)
-    print(f'回滚完成: {success} 成功, {len(failed)} 失败')
+def cmd_reverse(args: argparse.Namespace):
+    "从日志文件回滚已成功的操作（逆序执行 reverse()）。"
+    log_file = Path(args.logfile)
+    if not log_file.is_file():
+        print(f'日志文件不存在: {log_file}', file=sys.stderr)
+        sys.exit(1)
+    success, failed = reverse_from_log(log_file)
     if failed:
-        print('回滚失败的操作:')
-        for idx, desc, tb_str in failed:
+        print(f'回滚完成: {success} 成功, {len(failed)} 失败')
+        print('失败的操作为:')
+        for idx, desc, _ in failed:
             print(f'  {idx}. {desc}')
-            for line in tb_str.strip().split('\n'):
-                print(f'       {line}')
+    else:
+        print(f'回滚完成: {success} 成功, 0 失败')
 
 
 def cmd_log(args: argparse.Namespace):
@@ -261,6 +263,12 @@ def _check_admin_if_needed(actions: list[Action]):
 
 
 def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    log = logging.getLogger("flchemist.main")
     LOG_DIR.mkdir(exist_ok=True)
 
     parser = argparse.ArgumentParser(

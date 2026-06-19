@@ -61,7 +61,7 @@ def draft_classify_by_type(
     if not src.is_dir():
         raise NotADirectoryError(f"源路径不是目录: {src}")
 
-    dst.mkdir(parents=True, exist_ok=True)
+    # dst directory will be created by Move.run() during execution
     ext_map = extensions_map if extensions_map is not None else DEFAULT_EXT_MAP
 
     # 构建扩展名 -> 类别 反向映射
@@ -80,7 +80,7 @@ def draft_classify_by_type(
                 continue
             cat = others
         target_dir = dst / cat
-        target_dir.mkdir(parents=True, exist_ok=True)
+        # target_dir will be created by Move.run() during execution
         actions.append(Move(src=entry, dst=_resolve_conflict(target_dir / entry.name)))
 
     return actions
@@ -102,7 +102,7 @@ def draft_classify_by_date(
     if not src.is_dir():
         raise NotADirectoryError(f"源路径不是目录: {src}")
 
-    dst.mkdir(parents=True, exist_ok=True)
+    # dst directory will be created by Move.run() during execution
     attr = 'st_mtime' if use_mtime else 'st_ctime'
 
     actions: list[Action] = []
@@ -118,7 +118,7 @@ def draft_classify_by_date(
             date_str = 'unknown'
 
         target_dir = dst / date_str
-        target_dir.mkdir(parents=True, exist_ok=True)
+        # target_dir will be created by Move.run() during execution
         actions.append(Move(src=entry, dst=_resolve_conflict(target_dir / entry.name)))
 
     return actions

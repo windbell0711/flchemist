@@ -12,6 +12,7 @@
 ```powershell
 # 安装依赖
 pip install psutil
+- PyQt6 >= 6.7 (GUI mode)
 
 # 1. 生成操作计划（预览 + 保存为 .plan 文件）
 flchemist plan classify-by-type --src D:\Downloads --dst D:\Sorted
@@ -26,6 +27,17 @@ flchemist log
 flchemist reverse logs/20250619_143000_classify-by-type.jsonl
 ```
 
+
+## Quick Start - GUI Mode (Recommended)
+
+```powershell
+# Activate venv and launch GUI
+.venv\Scripts\python.exe gui_main.py
+```
+
+5-Step Wizard: Select Operation Type → Configure Parameters → Preview Plan & File Structure → Execute (with progress & error handling) → Summary.
+
+## Quick Start - CLI Mode
 ## 核心概念
 
 ### 工作流
@@ -132,10 +144,11 @@ pytest tests/ -v
 
 - Python >= 3.12
 - psutil（微信进程检测）
+- PyQt6 >= 6.7 (GUI mode)
 - 仅 Windows 支持 Junc（NTFS Junction）
 
 ## 开发计划
 
-- Qt GUI / EXE 打包 / PyPI 发布
+- EXE packaging (PyInstaller)
 - SymLink / HardLink / Compress 等预置 Action
 - 备份同步、文件扁平化等 Draft 场景
