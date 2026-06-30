@@ -10,7 +10,7 @@ from gui.draft_dialog import DraftDialog
 from gui.execute_dialog import ExecuteDialog
 from gui.revert_dialog import RevertDialog
 from gui.info_dialog import InfoDialog
-from gui.tree_preview import TreePreviewWidget
+
 from action import action_from_dict
 
 
@@ -120,8 +120,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plan_splitter = QtWidgets.QSplitter(QtCore.Qt.Orientation.Vertical)
         self.plan_splitter.setVisible(False)
 
-        self.tree = TreePreviewWidget()
-        self.plan_splitter.addWidget(self.tree)
+
+
 
         self.action_table = QtWidgets.QTableWidget()
         self.action_table.setColumnCount(3)
@@ -181,7 +181,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plan_info.setText(f"{len(self.session.actions)} actions")
 
         # Tree preview
-        self.tree.set_actions(self.session.actions)
+
 
         # Action table
         actions = self.session.actions
