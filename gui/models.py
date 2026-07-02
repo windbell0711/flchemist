@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import enum
 from dataclasses import dataclass, field
@@ -10,6 +10,7 @@ class DraftType(enum.Enum):
     CLASSIFY_BY_TYPE = 'classify-by-type'
     CLASSIFY_BY_DATE = 'classify-by-date'
     WECHAT_MIGRATE = 'wechat-migrate'
+    AI_GENERATED = 'ai-generated'
     FROM_PLAN_FILE = 'from-plan-file'
 
     def display_name(self) -> str:
@@ -18,6 +19,7 @@ class DraftType(enum.Enum):
             DraftType.CLASSIFY_BY_DATE: '按修改日期分类',
             DraftType.WECHAT_MIGRATE: '微信数据迁移',
             DraftType.FROM_PLAN_FILE: '从 .plan 文件导入',
+            DraftType.AI_GENERATED: 'AI 生成',
         }
         return names[self]
 
@@ -27,6 +29,7 @@ class DraftType(enum.Enum):
             DraftType.CLASSIFY_BY_DATE: '将源目录中的文件按修改日期归类到目标目录的子目录中',
             DraftType.WECHAT_MIGRATE: '将微信数据目录通过 NTFS Junction 迁移到其他盘符',
             DraftType.FROM_PLAN_FILE: '从已有的 .plan 文件导入操作列表，直接预览和执行',
+            DraftType.AI_GENERATED: '使用 AI 根据提示词自动生成文件整理计划',
         }
         return descs[self]
 
@@ -71,6 +74,8 @@ class ParamConfig:
     end_time: str = ''
     no_move_backup: bool = False
     plan_file: Optional[Path] = None
+    prompt: str = ''
+    folders: list[Path] = field(default_factory=list)
 
 
 @dataclass
@@ -82,3 +87,5 @@ class ExecuteResult:
     reverse_errors: list[str] = field(default_factory=list)
     log_file: Optional[Path] = None
     plan_file: Optional[Path] = None
+    prompt: str = ''
+    folders: list[Path] = field(default_factory=list)

@@ -1,0 +1,34 @@
+<p>flchemist uses a <b>plan-based workflow</b> to batch-process files safely.</p>
+
+<h3 style="color:#0078d4;">1. Draft (Create a Plan)</h3>
+<p>Choose an operation type and configure parameters. A <b>.plan file</b> is generated,
+containing a list of reversible actions (Copy, Move, Rename, Junction).</p>
+
+<ul>
+<li><b>按扩展名分类</b> — Sort files by extension into subdirectories</li>
+<li><b>按修改日期分类</b> — Sort files by modification date</li>
+<li><b>微信数据迁移</b> — Migrate WeChat data via NTFS Junction</li>
+<li><b>AI 生成</b> — Describe what you want in natural language, and AI generates the plan</li>
+</ul>
+
+<h3 style="color:#0078d4;">2. Open</h3>
+<p>Load an existing .plan file into the main window. The right panel shows the action list.</p>
+
+<h3 style="color:#0078d4;">3. Execute</h3>
+<p>Run each action in sequence. On failure you can:<br>
+&nbsp;&bull; <b>Abort</b> &mdash; roll back the failed action only and stop<br>
+&nbsp;&bull; <b>Rollback All</b> &mdash; undo every completed action and stop</p>
+
+<h3 style="color:#0078d4;">4. Revert</h3>
+<p>Reverse the currently loaded plan. Actions are undone in reverse order,
+restoring the original state.</p>
+
+<h3 style="color:#0078d4;">Logs</h3>
+<p>Execution logs are saved to <tt>logs/</tt> for auditing.</p>
+
+<hr style="border-color:#3c3c3c;">
+<p style="color:#888888; font-size:11px;">
+Each action has a built-in <tt>reverse()</tt> method, so the tool always knows
+how to undo what it did. The <b>AI 生成</b> draft uses DeepSeek API to create
+custom plans from your natural language description.
+</p>

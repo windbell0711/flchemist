@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import json
 import logging
 import shutil
@@ -63,6 +63,7 @@ class DraftDialog(QtWidgets.QDialog):
         self._build_type_page()
         self._build_date_page()
         self._build_wechat_page()
+        self._build_ai_page()
         self._on_type_changed(DraftType.CLASSIFY_BY_TYPE)
 
         # --- Status ---
@@ -145,6 +146,40 @@ class DraftDialog(QtWidgets.QDialog):
         form.addRow(self.wx_nomove)
         self.param_stack.addWidget(w)
 
+    def _build_ai_page(self):
+        w = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(w)
+        layout.setSpacing(8)
+        layout.addWidget(QtWidgets.QLabel("选择要整理的文件夹:"))
+        self.ai_folder_list = QtWidgets.QListWidget()
+        self.ai_folder_list.setAlternatingRowColors(True)
+        layout.addWidget(self.ai_folder_list)
+        btn_row = QtWidgets.QHBoxLayout()
+        self.ai_add_btn = QtWidgets.QPushButton("添加文件夹")
+        self.ai_add_btn.clicked.connect(self._on_ai_add_folder)
+        self.ai_remove_btn = QtWidgets.QPushButton("移除选中")
+        self.ai_remove_btn.clicked.connect(self._on_ai_remove_folder)
+        btn_row.addWidget(self.ai_add_btn)
+        btn_row.addWidget(self.ai_remove_btn)
+        btn_row.addStretch()
+        layout.addLayout(btn_row)
+        layout.addWidget(QtWidgets.QLabel("提示词 (描述你想怎么整理这些文件):"))
+        self.ai_prompt = QtWidgets.QPlainTextEdit()
+        self.ai_prompt.setPlaceholderText("例如：将文件夹中的文件按扩展名分类到对应子目录，图片放到 images，文档放到 documents")
+        self.ai_prompt.setMinimumHeight(100)
+        layout.addWidget(self.ai_prompt)
+        layout.addStretch()
+        self.param_stack.addWidget(w)
+
+    def _on_ai_add_folder(self):
+        d = QtWidgets.QFileDialog.getExistingDirectory(self, "选择文件夹")
+        if d:
+            self.ai_folder_list.addItem(d)
+
+    def _on_ai_remove_folder(self):
+        for item in self.ai_folder_list.selectedItems():
+            self.ai_folder_list.takeItem(self.ai_folder_list.row(item))
+
     # ---------- helpers ----------
 
     def _make_path_input(self, form, label, title):
@@ -184,6 +219,7 @@ class DraftDialog(QtWidgets.QDialog):
             DraftType.CLASSIFY_BY_TYPE: 0,
             DraftType.CLASSIFY_BY_DATE: 1,
             DraftType.WECHAT_MIGRATE: 2,
+            DraftType.AI_GENERATED: 3,
         }.get(dt, 0)
         self.param_stack.setCurrentIndex(idx)
 
@@ -232,6 +268,17 @@ class DraftDialog(QtWidgets.QDialog):
                 config.tar_path = Path(tar)
                 config.end_time = self.wx_endtime.text().strip()
                 config.no_move_backup = self.wx_nomove.isChecked()
+            elif dt == DraftType.AI_GENERATED:
+                folders = []
+                for i in range(self.ai_folder_list.count()):
+                    folders.append(Path(self.ai_folder_list.item(i).text()))
+                if not folders:
+                    raise ValueError('请添加至少一个文件夹')
+                prompt = self.ai_prompt.toPlainText().strip()
+                if not prompt:
+                    raise ValueError('请输入提示词')
+                config.folders = folders
+                config.prompt = prompt
         except (ValueError, json.JSONDecodeError) as e:
             QtWidgets.QMessageBox.warning(
                 self, "Invalid Parameters", str(e)

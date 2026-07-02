@@ -52,3 +52,29 @@ def print_tree(directory, depth=-1, prefix="", dir_only=False, exceed=8):
         if entry.is_dir():
             extension = "    " if is_last else "\u2502   "
             print_tree(entry, depth - 1, prefix + extension, dir_only)
+
+def folder_tree_to_dict(path, max_entries=200):
+    """Return a JSON-serializable dict of the directory tree."""
+    counter = 0
+    def _walk(p):
+        nonlocal counter
+        if counter >= max_entries:
+            return None
+        if not p.exists():
+            return None
+        stat = p.stat()
+        entry = {'name': p.name, 'path': str(p.resolve()), 'is_dir': p.is_dir(), 'size': stat.st_size if p.is_file() else 0}
+        counter += 1
+        if p.is_dir():
+            children = []
+            try:
+                for child in sorted(p.iterdir(), key=lambda x: (not x.is_dir(), x.name.lower())):
+                    kid = _walk(child)
+                    if kid is not None:
+                        children.append(kid)
+            except PermissionError:
+                children.append({'name': '(access denied)', 'path': '', 'is_dir': False, 'size': 0})
+            entry['children'] = children
+        return entry
+    result = _walk(path)
+    return result or {'name': str(path), 'path': str(path.resolve()), 'is_dir': True, 'size': 0, 'children': []}

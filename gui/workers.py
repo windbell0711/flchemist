@@ -17,6 +17,7 @@ from action import Action, action_to_dict, action_from_dict
 from drafts import draft_classify_by_type, draft_classify_by_date, draft_wechat_junction
 import logging
 from gui.models import DraftType, ParamConfig, ExecuteResult, ExecuteDecision
+from ai_draft import build_ai_draft
 from main import _log_write
 
 _LOG_DIR = Path(_parent) / 'logs'
@@ -39,6 +40,13 @@ class PlanWorker(QtCore.QThread):
                     plan_data = json.load(f)
                 actions = [action_from_dict(a) for a in plan_data['actions']]
                 plan_file = config.plan_file
+            elif config.draft_type == DraftType.AI_GENERATED:
+                raw = build_ai_draft(config.folders, config.prompt)
+                plan_file = self._save_ai_plan(raw, config)
+                actions = [action_from_dict(a) for a in raw['actions']]
+                self._log.info('AI plan: %d actions, saved to %s', len(actions), plan_file)
+                self.plan_ready.emit(actions, plan_file)
+                return
             else:
                 actions = self._build_actions(config)
                 plan_file = self._save_plan(actions, config)
@@ -66,7 +74,32 @@ class PlanWorker(QtCore.QThread):
         ts = datetime.now().strftime('%Y%m%d_%H%M%S')
         name = config.draft_type.value if config.draft_type else 'unknown'
         plan_file = plans_dir / f'{ts}_{name}.plan'
-        plan_data = {'draft': name, 'created_at': datetime.now().isoformat(), 'actions': [action_to_dict(a) for a in actions]}
+        desc = self._plan_description(config)
+        plan_data = {'draft': name, 'created_at': datetime.now().isoformat(), 'description': desc, 'actions': [action_to_dict(a) for a in actions]}
+        with open(plan_file, 'w', encoding='utf-8') as f:
+            json.dump(plan_data, f, ensure_ascii=False, indent=2)
+        return plan_file
+
+    @staticmethod
+    def _plan_description(config) -> str:
+        dt = config.draft_type
+        if dt == DraftType.CLASSIFY_BY_TYPE:
+            src = str(config.src) if config.src else "?"
+            dst = str(config.dst) if config.dst else "?"
+            return f"将 {src} 中的文件按扩展名分类整理到 {dst}"
+        if dt == DraftType.CLASSIFY_BY_DATE:
+            src = str(config.src) if config.src else "?"
+            dst = str(config.dst) if config.dst else "?"
+            return f"将 {src} 中的文件按修改日期分类整理到 {dst}"
+        if dt == DraftType.WECHAT_MIGRATE:
+            return f"将微信数据迁移到 {config.tar_path}"
+        return ""
+
+    def _save_ai_plan(self, plan_data: dict, config) -> Path:
+        plans_dir = Path(_parent) / 'plans'
+        plans_dir.mkdir(parents=True, exist_ok=True)
+        ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        plan_file = plans_dir / f'{ts}_ai_generated.plan'
         with open(plan_file, 'w', encoding='utf-8') as f:
             json.dump(plan_data, f, ensure_ascii=False, indent=2)
         return plan_file

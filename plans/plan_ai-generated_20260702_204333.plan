@@ -1,0 +1,28 @@
+{
+  "draft": "ai-generated",
+  "created_at": "2026-07-02T20:51:49.510493",
+  "description": "将所有子文件夹内的文件移动到 test_flc 根目录，实现扁平化；移动后子文件夹均变为空，需手动删除这些空文件夹（因动作类型限制无法直接执行删除操作）。",
+  "actions": [
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\test_flc\\新建文件夹\\Doc1 - 副本.docx",
+        "dst": "D:\\Desktop\\test_flc\\Doc1 - 副本.docx"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\test_flc\\新建文件夹\\腾讯会议.lnk",
+        "dst": "D:\\Desktop\\test_flc\\腾讯会议.lnk"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\test_flc\\新建文件夹\\新建文件夹 (2)\\game2_53.v4",
+        "dst": "D:\\Desktop\\test_flc\\game2_53.v4"
+      }
+    }
+  ]
+}

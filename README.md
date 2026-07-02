@@ -1,7 +1,6 @@
 ﻿# flchemist
 
-**Windows 文件批量处理框架** — 一组可组合、可逆的原子文件操作单元（Action）和常用编排函数（Draft），
-最初为微信数据迁移而写，现已通用化。
+**Windows 文件批量处理框架** — 一组可组合、可逆的原子文件操作单元（Action）和常用编排函数（Draft）。
 
 > **Data is precious, Operate carefully.  务必务必提前备份重要数据！！！** 
 
@@ -37,6 +36,8 @@ flchemist reverse logs/20250619_143000_classify-by-type.jsonl
 
 5-Step Wizard: Select Operation Type → Configure Parameters → Preview Plan & File Structure → Execute (with progress & error handling) → Summary.
 
+New in v0.2: **AI 生成** draft lets you describe your file organization needs in natural language, and the AI generates the plan automatically. Configure your API key in `.env`.
+
 ## Quick Start - CLI Mode
 ## 核心概念
 
@@ -69,11 +70,12 @@ plan  <draft> [选项]   ──生成──>  .plan 文件 (JSON, Action 列表)
 
 返回 list[Action] 的纯函数，无副作用。
 
-| Draft                | 说明      | 选项                                              |
-|----------------------|---------|-------------------------------------------------|
-| **classify-by-type** | 按扩展名分类  | --src --dst [--ext-map]                         |
-| **classify-by-date** | 按修改日期分类 | --src --dst [--pattern %Y-%m]                   |
-| **wechat-migrate**   | 微信数据迁移  | --wx-path --user --suffix --tar-path --end-time |
+| Draft                | 说明           | 选项                                              |
+|----------------------|--------------|-------------------------------------------------|
+| **classify-by-type** | 按扩展名分类       | --src --dst [--ext-map]                         |
+| **classify-by-date** | 按修改日期分类      | --src --dst [--pattern %Y-%m]                   |
+| **wechat-migrate**   | 微信数据迁移       | --wx-path --user --suffix --tar-path --end-time |
+| **ai-generated**     | AI 根据提示词自动生成 | --folders --prompt (GUI only)                   |
 
 ## 项目结构
 
@@ -83,7 +85,9 @@ flchemist/
 ├── drafts.py      # Draft 编排函数
 ├── wx.py          # 微信辅助（管理员检查、进程检测）
 ├── main.py        # CLI 入口
-├── utils.py       # 文件名编解码、目录树打印
+├── utils.py       # 文件名编解码、目录树打印、folder_tree_to_dict
+├── ai_draft.py     # AI 生成 DeepSeek API 集成
+├── .env            # DEEPSEEK_API_KEY
 ├── plans/         # 计划文件（.plan, JSON）
 ├── logs/          # 操作日志（.jsonl）
 ├── pyproject.toml
@@ -143,6 +147,8 @@ pytest tests/ -v
 ## 依赖
 
 - Python >= 3.14
-- psutil（微信进程检测）
-- PyQt6 >= 6.11 (GUI mode)
+- psutil >= 7.2（微信进程检测）
+- PyQt6 >= 6.11（GUI mode）
+- openai >= 2.44（DeepSeek API 调用）
+- python-dotenv >= 1.2（.env 配置加载）
 - 仅 Windows 支持 Junc（NTFS Junction）

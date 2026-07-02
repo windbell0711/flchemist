@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 import json
 import logging
 from pathlib import Path
@@ -178,7 +178,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
         name = self.session.plan_file.name if self.session.plan_file else "(in memory)"
         self.plan_header.setText(f"Plan: {name}")
-        self.plan_info.setText(f"{len(self.session.actions)} actions")
+
+        # Read description from plan file
+        description = ""
+        if self.session.plan_file and self.session.plan_file.exists():
+            try:
+                import json
+                pd = json.loads(self.session.plan_file.read_text(encoding="utf-8"))
+                description = pd.get("description", "")
+            except Exception:
+                pass
+
+        info = f"{len(self.session.actions)} actions"
+        if description:
+            info += f"  |  {description}"
+            self.plan_info.setToolTip(description)
+        self.plan_info.setText(info)
 
         # Tree preview
 
