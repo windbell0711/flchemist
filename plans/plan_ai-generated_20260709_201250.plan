@@ -1,0 +1,343 @@
+{
+  "draft": "ai-generated",
+  "created_at": "2026-07-09T20:13:19.753681",
+  "description": "为 piano_samples 文件夹下所有以 '1_' 开头的 mp3 文件去掉该前缀，例如将 '1_A2.mp3' 重命名为 'A2.mp3'。共 48 个文件。",
+  "actions": [
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_A2.mp3",
+        "name": "A2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_A3.mp3",
+        "name": "A3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_A4.mp3",
+        "name": "A4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_A5.mp3",
+        "name": "A5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_As2.mp3",
+        "name": "As2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_As3.mp3",
+        "name": "As3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_As4.mp3",
+        "name": "As4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_As5.mp3",
+        "name": "As5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_B2.mp3",
+        "name": "B2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_B3.mp3",
+        "name": "B3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_B4.mp3",
+        "name": "B4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_B5.mp3",
+        "name": "B5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_C2.mp3",
+        "name": "C2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_C3.mp3",
+        "name": "C3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_C4.mp3",
+        "name": "C4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_C5.mp3",
+        "name": "C5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Cs2.mp3",
+        "name": "Cs2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Cs3.mp3",
+        "name": "Cs3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Cs4.mp3",
+        "name": "Cs4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Cs5.mp3",
+        "name": "Cs5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_D2.mp3",
+        "name": "D2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_D3.mp3",
+        "name": "D3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_D4.mp3",
+        "name": "D4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_D5.mp3",
+        "name": "D5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Ds2.mp3",
+        "name": "Ds2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Ds3.mp3",
+        "name": "Ds3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Ds4.mp3",
+        "name": "Ds4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Ds5.mp3",
+        "name": "Ds5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_E2.mp3",
+        "name": "E2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_E3.mp3",
+        "name": "E3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_E4.mp3",
+        "name": "E4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_E5.mp3",
+        "name": "E5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_F2.mp3",
+        "name": "F2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_F3.mp3",
+        "name": "F3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_F4.mp3",
+        "name": "F4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_F5.mp3",
+        "name": "F5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Fs2.mp3",
+        "name": "Fs2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Fs3.mp3",
+        "name": "Fs3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Fs4.mp3",
+        "name": "Fs4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Fs5.mp3",
+        "name": "Fs5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_G2.mp3",
+        "name": "G2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_G3.mp3",
+        "name": "G3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_G4.mp3",
+        "name": "G4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_G5.mp3",
+        "name": "G5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Gs2.mp3",
+        "name": "Gs2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Gs3.mp3",
+        "name": "Gs3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Gs4.mp3",
+        "name": "Gs4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Rename",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples\\1_Gs5.mp3",
+        "name": "Gs5.mp3"
+      }
+    }
+  ]
+}

@@ -1,0 +1,343 @@
+{
+  "draft": "ai-generated",
+  "created_at": "2026-07-09T20:39:06.654154",
+  "description": "将 piano_samples 文件夹中的所有 .mp3 文件按是否包含 's'（黑键）分类移动到“黑键”和“白键”两个子文件夹中。文件名带 's' 的为黑键，否则为白键。",
+  "actions": [
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\A2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\A2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\A3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\A3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\A4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\A4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\A5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\A5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\As2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\As2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\As3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\As3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\As4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\As4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\As5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\As5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\B2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\B2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\B3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\B3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\B4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\B4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\B5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\B5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\C2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\C2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\C3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\C3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\C4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\C4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\C5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\C5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Cs2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Cs2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Cs3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Cs3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Cs4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Cs4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Cs5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Cs5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\D2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\D2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\D3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\D3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\D4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\D4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\D5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\D5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Ds2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Ds2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Ds3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Ds3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Ds4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Ds4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Ds5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Ds5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\E2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\E2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\E3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\E3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\E4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\E4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\E5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\E5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\F2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\F2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\F3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\F3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\F4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\F4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\F5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\F5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Fs2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Fs2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Fs3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Fs3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Fs4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Fs4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Fs5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Fs5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\G2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\G2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\G3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\G3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\G4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\G4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\G5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\白键\\G5.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Gs2.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Gs2.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Gs3.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Gs3.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Gs4.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Gs4.mp3"
+      }
+    },
+    {
+      "__action_cls__": "Move",
+      "__fields__": {
+        "src": "D:\\Desktop\\piano_samples - 副本 - 副本\\Gs5.mp3",
+        "dst": "D:\\Desktop\\piano_samples - 副本 - 副本\\黑键\\Gs5.mp3"
+      }
+    }
+  ]
+}
