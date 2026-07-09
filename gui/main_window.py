@@ -10,6 +10,7 @@ from gui.draft_dialog import DraftDialog
 from gui.execute_dialog import ExecuteDialog
 from gui.revert_dialog import RevertDialog
 from gui.info_dialog import InfoDialog
+from gui.dialogs import ApiConfigDialog
 
 from action import action_from_dict
 
@@ -76,6 +77,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_info = self._make_side_button("ℹ️  Info", "Learn how flchemist works")
         self.btn_info.clicked.connect(self._open_info)
         left_layout.addWidget(self.btn_info)
+
+        self.btn_api = self._make_side_button('\U0001f511  API', 'Configure API key and endpoint')
+        self.btn_api.clicked.connect(self._open_api_config)
+        left_layout.addWidget(self.btn_api)
 
         left_layout.addStretch()
 
@@ -261,6 +266,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def _open_info(self):
         dlg = InfoDialog(self)
+        dlg.exec()
+
+    def _open_api_config(self):
+        dlg = ApiConfigDialog(self)
         dlg.exec()
 
     def _open_revert(self):
