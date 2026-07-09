@@ -30,9 +30,12 @@ SYSTEM_PROMPT = """You are a file-management plan generator. Given folder trees 
   ]
 }
 
+Rename uses "name" instead of "dst":
+{ "__action_cls__": "Rename", "__fields__": { "src": "/full/path/src", "name": "new-name.ext" } }
+
 Rules:
 - Only use Move, Copy, or Rename actions. Never use Junc.
-- Use Move for moving files/folders, Copy for copying, Rename for renaming files.
+- Use Move for moving files/folders, Copy for copying, Rename for renaming files or directories.
 - All paths must be absolute Windows paths (use \\\\\\\\ or /).
 - Return ONLY valid JSON, no markdown fences, no extra text before or after.
 - "description" should briefly explain in Chinese what the plan achieves.
@@ -78,7 +81,7 @@ Generate a file-management plan based on these folders and the user request."""
             {"role": "user", "content": user_content},
         ],
         temperature=0.1,
-        max_tokens=4096,
+        max_tokens=8192,
     )
 
     raw = response.choices[0].message.content
@@ -96,7 +99,16 @@ Generate a file-management plan based on these folders and the user request."""
             lines = lines[:-1]
         text = "\n".join(lines).strip()
 
-    plan_data = json.loads(text)
+    try:
+        plan_data = json.loads(text)
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"""AI response is not valid JSON (likely truncated). max_tokens={8192}.
+Parsing error: {e}
+
+Raw response (last 500 chars):
+...{text[-500:]}"""
+        ) from e
 
     # Validate actions
     actions_raw = plan_data.get("actions", [])
