@@ -4,13 +4,15 @@ from __future__ import annotations
 import json
 import logging
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
+import os
 from pathlib import Path
 from pathlib import Path
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 
 from action import action_from_dict
 
@@ -44,13 +46,17 @@ Rules:
 """
 
 
+def _config_env_path_ai() -> Path:
+    return Path(sys.argv[0]).resolve().parent / ".env"
+
+
 def build_ai_draft(folders: list[Path], prompt: str) -> dict:
     """Call DeepSeek and return a plan dict ready to write as .plan file."""
-    _env_path = Path(__file__).resolve().parent / ".env"
+    _env_path = _config_env_path_ai()
     load_dotenv(_env_path)
     api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key:
-        raise ValueError("DEEPSEEK_API_KEY not found in .env file")
+        raise ValueError("请先配置 DeepSeek API Key：点击左侧「API」按钮，在对话框中输入你的 API Key 并保存")
 
     # Build folder tree info
     from utils import folder_tree_to_dict
@@ -74,15 +80,23 @@ Generate a file-management plan based on these folders and the user request."""
 
     _log.info("Calling DeepSeek API with %d folders, prompt length=%d", len(folders), len(prompt))
     _log.info("--- AI REQUEST ---\nSystem prompt:\n%s\n\nUser content:\n%s", SYSTEM_PROMPT, user_content)
-    response = client.chat.completions.create(
-        model="deepseek-v4-flash",
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_content},
-        ],
-        temperature=0.1,
-        max_tokens=8192,
-    )
+    try:
+        response = client.chat.completions.create(
+            model="deepseek-v4-flash",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_content},
+            ],
+            temperature=0.1,
+            max_tokens=8192,
+        )
+    except AuthenticationError:
+        raise ValueError(
+            "API Key 无效或已过期，请检查：\n"
+            "1. 点击左侧「API」按钮查看当前 Key\n"
+            "2. 确保 Key 没有过期\n"
+            "3. 如果问题持续，请前往 https://platform.deepseek.com 重新生成 Key"
+        )
 
     raw = response.choices[0].message.content
     _log.info("--- AI RESPONSE ---\n%s", raw)

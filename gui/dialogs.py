@@ -1,4 +1,6 @@
 ﻿from __future__ import annotations
+import os
+import sys
 from pathlib import Path
 
 from PyQt6 import QtWidgets, QtCore, QtGui
@@ -63,12 +65,17 @@ class ErrorChoiceDialog(QtWidgets.QDialog):
         self.accept()
 
 
+def _config_env_path() -> Path:
+    """Return .env path alongside the executable / entry script."""
+    return Path(sys.argv[0]).resolve().parent / ".env"
+
+
 class ApiConfigDialog(QtWidgets.QDialog):
     """Configure API key and base URL for AI features."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._env_path = Path(__file__).resolve().parent.parent / ".env"
+        self._env_path = _config_env_path()
         self._setup_ui()
         self._load_config()
 

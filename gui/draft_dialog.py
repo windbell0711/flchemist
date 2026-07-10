@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 import json
 import logging
 import shutil
@@ -293,10 +293,12 @@ class DraftDialog(QtWidgets.QDialog):
         if config is None:
             return
 
-        suggested = (
+        plans_dir = Path("plans")
+        plans_dir.mkdir(parents=True, exist_ok=True)
+        suggested = str(plans_dir / (
             f"plan_{config.draft_type.value}_"
             f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.plan"
-        )
+        ))
         path, _ = QtWidgets.QFileDialog.getSaveFileName(
             self, "Save Plan As", suggested, "Plan files (*.plan)"
         )

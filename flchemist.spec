@@ -5,7 +5,10 @@ a = Analysis(
     ['gui_main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[
+        ('gui/info_content.html', 'gui'),
+        ('flchemist.ico', '.'),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
