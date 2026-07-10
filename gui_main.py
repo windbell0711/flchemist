@@ -53,6 +53,7 @@ def main():
     log.info("QApplication created, dark theme applied")
     app.setApplicationName("flchemist")
     app.setApplicationDisplayName("flchemist")
+    app.setWindowIcon(QtGui.QIcon("flchemist.ico"))
 
     window = MainWindow()
     window.show()

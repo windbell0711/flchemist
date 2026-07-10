@@ -101,6 +101,7 @@ def cmd_run(args: argparse.Namespace):
         print('(空列表，没有需要执行的操作)')
         return
 
+    _check_dangerous(actions)
     _check_admin_if_needed(actions)
 
     log_file = _log_path(draft_name)
@@ -253,6 +254,19 @@ def _build_actions(args: argparse.Namespace) -> list[Action]:
 
     return fn(**kwargs)
 
+
+def _check_dangerous(actions: list[Action]):
+    """检查是否包含 Copy / Junc 等危险操作，提示确认。"""
+    dangerous = [a for a in actions if isinstance(a, (Move, Junc))]
+    if dangerous:
+        print(f'\n警告：该计划包含 {len(dangerous)} 项潜在危险操作（Move / Junc）')
+        try:
+            reply = input('确定继续？(y/N) ').strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            reply = 'n'
+        if reply != 'y':
+            print('已取消')
+            sys.exit(0)
 
 def _check_admin_if_needed(actions: list[Action]):
     """检查操作列表中是否包含需要管理员权限的操作（如 Junc）。"""

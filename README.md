@@ -1,8 +1,17 @@
-﻿# flchemist
+﻿
+<a href="https://github.com/windbell0711/flchemist">
+  <p align="center">
+    <img src="flchemist.ico" width="150" height="150">
+  </p>
+</a>
+
+# flchemist
 
 **Windows 文件批量处理框架** — 一组可组合、可逆的原子文件操作单元（Action）和常用编排函数（Draft）。
 
-> **Data is precious, Operate carefully.  务必务必提前备份重要数据！！！** 
+> **Data is precious, Operate carefully.**
+> 
+> **务必务必提前备份重要数据！！！** 
 
 ---
 
@@ -10,20 +19,19 @@
 
 ```powershell
 # 安装依赖
-pip install psutil
-- PyQt6 >= 6.7 (GUI mode)
+pip install psutil openai python-dotenv pyqt6
 
 # 1. 生成操作计划（预览 + 保存为 .plan 文件）
-flchemist plan classify-by-type --src D:\Downloads --dst D:\Sorted
+python main.py plan classify-by-type --src D:\Downloads --dst D:\Sorted
 
 # 2. 从计划文件执行操作
-flchemist run plans/20260619_143000_classify-by-type.plan
+python main.py run plans/20260619_143000_classify-by-type.plan
 
 # 查看操作历史
-flchemist log
+python main.py log
 
 # 从日志回滚
-flchemist reverse logs/20250619_143000_classify-by-type.jsonl
+python main.py reverse logs/20250619_143000_classify-by-type.jsonl
 ```
 
 
@@ -34,7 +42,8 @@ flchemist reverse logs/20250619_143000_classify-by-type.jsonl
 .venv\Scripts\python.exe gui_main.py
 ```
 
-5-Step Wizard: Select Operation Type → Configure Parameters → Preview Plan & File Structure → Execute (with progress & error handling) → Summary.
+4-Step Workflow: **Draft** (create a plan) → **Open** (load .plan) → **Execute** (run with progress & error handling) → **Revert** (undo actions).
+An **Info** button and **API** configuration panel are also available in the sidebar.
 
 New in v0.2: **AI 生成** draft lets you describe your file organization needs in natural language, and the AI generates the plan automatically. Configure your API key in `.env`.
 
@@ -72,9 +81,9 @@ plan  <draft> [选项]   ──生成──>  .plan 文件 (JSON, Action 列表)
 
 | Draft                | 说明           | 选项                                              |
 |----------------------|--------------|-------------------------------------------------|
-| **classify-by-type** | 按扩展名分类       | --src --dst [--ext-map]                         |
+| **classify-by-type** | 按扩展名分类       | --src --dst                                      |
 | **classify-by-date** | 按修改日期分类      | --src --dst [--pattern %Y-%m]                   |
-| **wechat-migrate**   | 微信数据迁移       | --wx-path --user --suffix --tar-path --end-time |
+| **wechat-migrate**   | 微信数据迁移       | --wx-path --user --suffix --tar-path --end-time [--no-move-backup] |
 | **ai-generated**     | AI 根据提示词自动生成 | --folders --prompt (GUI only)                   |
 
 ## 项目结构
@@ -88,9 +97,11 @@ flchemist/
 ├── utils.py       # 文件名编解码、目录树打印、folder_tree_to_dict
 ├── ai_draft.py     # AI 生成 DeepSeek API 集成
 ├── .env            # DEEPSEEK_API_KEY
+├── gui/            # PyQt6 桌面 GUI 包
 ├── plans/         # 计划文件（.plan, JSON）
 ├── logs/          # 操作日志（.jsonl）
 ├── pyproject.toml
+├── flchemist.spec  # PyInstaller 打包配置
 └── tests/
     ├── test_action.py   # Action run + reverse + 序列化测试
     └── test_drafts.py   # Draft 路径与计数验证
@@ -99,32 +110,32 @@ flchemist/
 ## CLI 参考
 
 ```
-flchemist plan <draft> [options]            生成操作计划（不执行）
-flchemist run  <planfile>                   从计划文件执行操作
-flchemist reverse <logfile>                 回滚操作
-flchemist log                               查看操作历史
+python main.py plan <draft> [options]      生成操作计划（不执行）
+python main.py run  <planfile>              从计划文件执行操作
+python main.py reverse <logfile>            回滚操作
+python main.py log                          查看操作历史
 ```
 
 ### 子命令示例
 
 ```powershell
 # 生成计划（自动保存到 plans/ 目录）
-flchemist plan classify-by-type --src D:\Downloads --dst D:\Sorted
+python main.py plan classify-by-type --src D:\Downloads --dst D:\Sorted
 
 # 指定输出路径
-flchemist plan classify-by-type --src D:\Downloads --dst D:\Sorted -o my_plan.plan
+python main.py plan classify-by-type --src D:\Downloads --dst D:\Sorted -o my_plan.plan
 
 # 按日期分类
-flchemist plan classify-by-date --src D:\Photos --dst D:\Photos_Sorted --pattern %%Y-%%m-%%d
+python main.py plan classify-by-date --src D:\Photos --dst D:\Photos_Sorted --pattern %Y-%m-%d
 
 # 微信迁移
-flchemist plan wechat-migrate --wx-path D:\xwechat_files --user wxid_xxx --suffix _4d31 --tar-path E:\WeChat_Data --end-time 2026-06
+python main.py plan wechat-migrate --wx-path D:\xwechat_files --user wxid_xxx --suffix _4d31 --tar-path E:\WeChat_Data --end-time 2026-06
 
 # 执行计划
-flchemist run plans/20260619_143000_wechat-migrate.plan
+python main.py run plans/20260619_143000_wechat-migrate.plan
 
 # 回滚
-flchemist reverse logs/20250619_143000_wechat-migrate.jsonl
+python main.py reverse logs/20250619_143000_wechat-migrate.jsonl
 ```
 
 ## 日志与安全

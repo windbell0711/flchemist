@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 import json
 import logging
 from pathlib import Path
@@ -260,6 +260,20 @@ class MainWindow(QtWidgets.QMainWindow):
     def _open_execute(self):
         if not self.session.actions:
             return
+        from action import Move, Junc
+        dangerous = [
+            (i+1, act) for i, act in enumerate(self.session.actions)
+            if isinstance(act, (Move, Junc))
+        ]
+        if dangerous:
+            reply = QtWidgets.QMessageBox.warning(
+                self, "警告",
+                f"该plan包含 {len(dangerous)} 项较危险操作(Move/Junc), 如果数据重要, 请先备份再确认execute.",
+                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No,
+                QtWidgets.QMessageBox.StandardButton.No,
+            )
+            if reply != QtWidgets.QMessageBox.StandardButton.Yes:
+                return
         dlg = ExecuteDialog(self.session, self)
         dlg.exec()
         self._update_session_state()
